@@ -22,17 +22,17 @@ public class Convert implements TextGraphicsConverter {
 
         int newWidth = 0;
         int newHeight = 0;
+
+        int ratioWidth = imgWidth / width;
+        int ratioHeight = imgHeight / height;
         if (imgRatio > maxRatio) {
             throw new BadImageSizeException(imgRatio, maxRatio);
-        } else if ((width == height && imgWidth > imgHeight) || width / imgRatio <= height) {
-            newWidth = width;
-            newHeight = (int) (width / imgRatio);
-        } else if ((width == height && imgHeight > imgWidth) || height / imgRatio <= width ) {
-            newHeight = height;
-            newWidth = (int) (height / imgRatio);
-        } else if (height == width) {
-            newHeight = height;
-            newWidth = width;
+        } else if (ratioWidth >= ratioHeight && ratioWidth >= 1) {
+            newWidth = imgWidth / ratioWidth;
+            newHeight = imgHeight / ratioWidth;
+        } else if (ratioHeight > ratioWidth && ratioHeight >= 1) {
+            newWidth = imgWidth / ratioHeight;
+            newHeight = imgHeight / ratioHeight;
         }
         Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
 
@@ -41,22 +41,15 @@ public class Convert implements TextGraphicsConverter {
         graphics.drawImage(scaledImage, 0, 0, null);
 
         WritableRaster bwRaster = bwImg.getRaster();
+        StringBuilder result = new StringBuilder();
 
-        char[][] arrChar = new char[newHeight][newWidth];
         for (int h = 0; h < newHeight; h++){
             for (int w = 0; w < newWidth; w++){
                 int color = bwRaster.getPixel(w, h, new int[3])[0];
                 char c = schema.convert(color);
-                arrChar[h][w] = c;
-            }
-        }
-
-        StringBuilder result = new StringBuilder();
-
-        for (char[] rows : arrChar) {
-            for (char px : rows) {
-                result.append(px);
-                result.append(px);
+                result.append(c);
+                result.append(c);
+                result.append(c);
             }
             result.append("\n");
         }

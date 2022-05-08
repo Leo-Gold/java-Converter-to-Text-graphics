@@ -17,7 +17,7 @@ public class Main {
         server.start(); // Запускаем
 
         // Или то же, но с выводом на экран:
-//        converter.setMaxWidth(50);
+//        converter.setMaxWidth(30);
 //        converter.setMaxHeight(50);
 //        converter.setMaxRatio(3);
 //        String url = "https://i.ibb.co/6DYM05G/edu0.jpg";
